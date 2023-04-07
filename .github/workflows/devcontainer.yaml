@@ -21,6 +21,7 @@ jobs:
       - uses: trunk-io/trunk-action@v1
         if: github.event_name != 'pull_request'
         with:
+          upload-series: main
           trunk-token: ${{ secrets.TRUNK_API_TOKEN }}
   prebuild:
     name: Prebuild image
