@@ -1,4 +1,4 @@
-name: Dev Container
+name: Devcontainer Build
 on:
   workflow_dispatch:
   schedule:
@@ -20,8 +20,8 @@ jobs:
       - run: ./bootstrap.sh
       - uses: trunk-io/trunk-action@v1
         if: github.event_name != 'pull_request'
-  prebuild:
-    name: Prebuild image
+  build:
+    name: Build and publish new image
     runs-on: ubuntu-latest
     needs: check
     steps:
@@ -39,7 +39,7 @@ jobs:
   sync:
     name: Synchronize branch
     if: github.event_name != 'pull_request'
-    needs: prebuild
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
