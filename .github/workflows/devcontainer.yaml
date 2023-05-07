@@ -1,4 +1,4 @@
-name: Development Container builds
+name: Devcontainer builds
 on:
   workflow_dispatch:
   schedule:
