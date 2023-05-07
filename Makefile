@@ -35,14 +35,21 @@ help:
 .PHONY: install # Install the project dependencies
 # -----------------------------------------------------------------------------
 
-install: .git/config node_modules
-
-.git/config: node_modules
-	yarn trunk git-hooks sync
-
+install: node_modules
 node_modules: package.json
 	yarn install
 	touch $@
+
+install: .git/config
+.git/config: node_modules
+	yarn trunk git-hooks sync
+	touch $@
+
+.PHONY: upgrade # Upgrade the project dependencies
+# -----------------------------------------------------------------------------
+
+upgrade: install
+	yarn trunk upgrade
 
 .PHONY: check # Check new and changed files
 # -----------------------------------------------------------------------------
