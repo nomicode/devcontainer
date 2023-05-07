@@ -5,9 +5,9 @@ ENV BREW_BIN='/home/linuxbrew/.linuxbrew/bin'
 ENV SYS_PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 ENV PATH="${BREW_BIN}:${SYS_PATH}"
 
-COPY . /tmp
-WORKDIR /tmp
-RUN /tmp/run.d/00_apt.sh && \
-    /tmp/run.d/01_npm.sh && \
-    /tmp/run.d/02_homebrew.sh && \
-    /tmp/run.d/03_system.sh
+COPY . /opt/devcontainer
+WORKDIR /opt/devcontainer
+RUN ./run.d/00_apt.sh && \
+    ./run.d/01_npm.sh && \
+    ./run.d/02_homebrew.sh && \
+    ./run.d/03_system.sh
