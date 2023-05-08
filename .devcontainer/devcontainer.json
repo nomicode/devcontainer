@@ -2,7 +2,7 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "remoteUser": "root",
+  // "remoteUser": "root",
   "updateContentCommand": [
     "/opt/devcontainer/update-content.sh",
     "${containerWorkspaceFolder}"
