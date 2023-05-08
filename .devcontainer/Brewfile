@@ -1,0 +1,16 @@
+brew "bash-completion@2"
+brew "direnv"
+brew "fd"
+brew "gcc"
+brew "gh"
+brew "git"
+brew "moreutils"
+brew "the_silver_searcher"
+
+# TODO
+# -----------------------------------------------------------------------------
+
+# - [ ] ripgrep
+# - [ ] fzf
+#   - [ ] Install https://github.com/junegunn/fzf in devcontainer
+# - [ ] Install hooks in dotfiles repo
