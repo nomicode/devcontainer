@@ -1,4 +1,3 @@
 #!/bin/sh -ex
 
-# TODO
-# https://github.com/rhysd/fixred
+# TODO: https://github.com/rhysd/fixred

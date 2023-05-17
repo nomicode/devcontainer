@@ -4,7 +4,7 @@
   },
   // "remoteUser": "root",
   "updateContentCommand": [
-    "/opt/devcontainer/update-content.sh",
+    "/opt/devcontainer/update_content.sh",
     "${containerWorkspaceFolder}"
   ],
   "customizations": {

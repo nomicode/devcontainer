@@ -1,5 +1,9 @@
 #!/bin/sh -ex
 
+BOLD='\033[1m'
+RESET='\033[0m'
+printf "${RED}foo${NC}\n"
+
 NODESOURCE_URL=https://deb.nodesource.com/setup_19.x
 NODESOURCE_SCRIPT=nodesource_setup.sh
 
@@ -36,6 +40,7 @@ trap clean EXIT
 
 sudo apt-get -qq update -y
 sudo apt-get -qq upgrade -y
+
 DEBIAN_FRONTEND=noninteractive \
     sudo apt-get -qq install -y --no-install-recommends \
     acl \

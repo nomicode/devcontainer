@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 # Update content
 # ============================================================================
@@ -13,6 +13,7 @@ if test -z "${workspace_dir}"; then
     exit 1
 fi
 
+# Get current username
 whoami="$(whoami)"
 
 # Fix workspace umask
@@ -30,7 +31,19 @@ sudo setfacl -bnR "${workspace_dir}"
 # Fix Homebrew ownership
 # ----------------------------------------------------------------------------
 
-./fix-homebrew-owner.sh
+# Allow the current user to make changes to Homebrew by changing ownership of
+# the `HOMEBREW_PREFIX` directory and its contents to the current user
+
+if test -z "${HOMEBREW_PREFIX:=}"; then
+    HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+fi
+
+# Test whether the `HOMEBREW_PREFIX` directory exists
+if test -d "${HOMEBREW_PREFIX}"; then
+    # Change the ownership of the `HOMEBREW_PREFIX` directory and its contents
+    # to the current user
+    sudo chown -R "${whoami}" "${HOMEBREW_PREFIX}"
+fi
 
 # Allow direnv
 # ----------------------------------------------------------------------------
@@ -39,8 +52,13 @@ sudo setfacl -bnR "${workspace_dir}"
 # and used as devcontainer (but it seems this is not the case)
 echo "${PATH}"
 
-# Test whether `direnv` is on the PATH
-if command -v direnv; then
-    # Allow direnv to load `.envrc` files in the workspace mount
-    direnv allow "${workspace_dir}"
+envrc_file="${workspace_dir}/.envrc"
+
+# Test for existence of `.envrc` file
+if test -f "${envrc_file}"; then
+    # Test whether `direnv` is on the PATH
+    if command -v direnv; then
+        # Allow direnv to load `.envrc` files in the workspace mount
+        direnv allow "${workspace_dir}"
+    fi
 fi

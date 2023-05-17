@@ -13,7 +13,7 @@ U = [4m
 RED = [0;31m
 RST = [0m
 
-TOP_DIR = $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+TOP_DIR = $(abspath $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST)))))
 
 # Primary targets
 # =============================================================================
@@ -32,7 +32,7 @@ help:
 		sed -E "s,^([a-z-]+),  \x1b$(B)\1\x1b$(RST),"
 
 
-.PHONY: install # Install the project dependencies
+.PHONY: install # Install the project build system
 # -----------------------------------------------------------------------------
 
 install: node_modules
@@ -45,7 +45,7 @@ install: .git/config
 	yarn trunk git-hooks sync
 	touch $@
 
-.PHONY: upgrade # Upgrade the project dependencies
+.PHONY: upgrade # Upgrade the build system dependencies
 # -----------------------------------------------------------------------------
 
 upgrade: install
@@ -75,10 +75,21 @@ format: install
 format-all: install
 	yarn trunk fmt --all
 
-# Clean
+.PHONY: test-build # Test the devcontainer build
 # -----------------------------------------------------------------------------
 
+INSTALL_DIR = $(HOME)/.devcontainer
+BUILD_SCRIPT = build.sh
+UPDATE_CONTENT_SCRIPT = update_content.sh
+test-build: install
+	rm -rf $(INSTALL_DIR)
+	cp -R $(TOP_DIR)/.devcontainer/ $(INSTALL_DIR)
+	cd $(INSTALL_DIR) && ./$(UPDATE_CONTENT_SCRIPT) $(TOP_DIR)
+	cd $(INSTALL_DIR) && ./$(BUILD_SCRIPT)
+
 .PHONY: clean # Remove build artifacts
+# -----------------------------------------------------------------------------
+
 clean: _rm-empty-dirs
 
 .PHONY: _rm-empty_-irs

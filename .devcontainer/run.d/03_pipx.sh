@@ -34,3 +34,5 @@ pipx_install \
     pydocstyle \
     vulture \
     yapf
+
+pip3 cache purge

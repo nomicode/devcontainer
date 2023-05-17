@@ -24,13 +24,14 @@ trap clean EXIT
     "./${INSTALL_SCRIPT}"
 )
 
-# Get absolute path to script directory
-script_path="$(realpath "${0}")"
-script_dir="$(dirname "${script_path}")"
-
-# Fix Homebrew owner
-"${script_dir}/../fix-homebrew-owner.sh"
+# Replicate environment variables set in the Dockerfile
+BREW_BIN=/home/linuxbrew/.linuxbrew/bin
+BREW_SBIN=/home/linuxbrew/.linuxbrew/sbin
+PATH="${BREW_SBIN}:${BREW_BIN}:${PATH}"
+export PATH
 
 brew update
-brew bundle
+brew bundle install
 brew doctor
+
+rm -rf "$(brew --cache)"
