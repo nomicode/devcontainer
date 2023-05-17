@@ -34,4 +34,5 @@ brew update
 brew bundle install
 brew doctor
 
-rm -rf "$(brew --cache)"
+brew_cache="$(brew --cache)"
+rm -rf "${brew_cache}"

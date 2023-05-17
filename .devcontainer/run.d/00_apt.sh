@@ -1,9 +1,5 @@
 #!/bin/sh -ex
 
-BOLD='\033[1m'
-RESET='\033[0m'
-printf "${RED}foo${NC}\n"
-
 NODESOURCE_URL=https://deb.nodesource.com/setup_19.x
 NODESOURCE_SCRIPT=nodesource_setup.sh
 
