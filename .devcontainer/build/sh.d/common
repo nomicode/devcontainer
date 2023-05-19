@@ -1,0 +1,13 @@
+# shellcheck shell=sh
+
+print_running() {
+    # Bold text, reversed colors, and padded to 79 characters (to stand out
+    # from normal output)
+    printf "\e[1m\e[7mRUNNING: %-79s\e[0m\n" "$*"
+}
+
+apt_install() {
+    sudo apt-get -qq update -y
+    sudo apt-get -qq install -y --no-install-recommends "$@"
+    sudo rm -rf /var/lib/apt/lists/*
+}

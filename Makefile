@@ -1,19 +1,15 @@
 # =============================================================================
-# Project build
+# Primary build
 # =============================================================================
 
 .EXPORT_ALL_VARIABLES:
 
-# POSIX locale
-LC_ALL = C
+include common.mk
 
-# ANSI formatting
-B = [1m
-U = [4m
-RED = [0;31m
-RST = [0m
-
-TOP_DIR = $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+trunk_args=
+ifeq ($(CI),true)
+trunk_args += --ci --ci-progress
+endif
 
 # Primary targets
 # =============================================================================
@@ -23,62 +19,68 @@ TOP_DIR = $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 .DEFAULT_GOAL = help
 
-help:
-	@ printf 'Usage: \e$(B)make\e$(RST) [ target ]\n\n'
-	@ printf 'Available targets:\n\n'
-	@ grep -E '^.PHONY: [a-z-]+ #' Makefile | \
-		sed -E 's,^.PHONY: ([a-z-]+) # (.*),\1#\2,' | \
-		column -s '#' -t | \
-		sed -E "s,^([a-z-]+),  \x1b$(B)\1\x1b$(RST),"
+help: _help
 
-
-.PHONY: install # Install the project dependencies
+.PHONY: init # Initialize the build system
 # -----------------------------------------------------------------------------
 
-install: node_modules
+init: node_modules
 node_modules: package.json
-	yarn install
+	yarn install $(trunk_args)
 	touch $@
 
-install: .git/config
+init: .git/config
 .git/config: node_modules
-	yarn trunk git-hooks sync
+	yarn trunk git-hooks sync $(trunk_args)
 	touch $@
 
-.PHONY: upgrade # Upgrade the project dependencies
+.PHONY: upgrade # Upgrade the build system dependencies
 # -----------------------------------------------------------------------------
 
-upgrade: install
-	yarn trunk upgrade
+upgrade: init
+	yarn trunk upgrade $(trunk_args)
 
 .PHONY: check # Check new and changed files
 # -----------------------------------------------------------------------------
 
-check: install
-	yarn trunk check
+check: init
+	yarn trunk check $(trunk_args)
 
 .PHONY: check-all # Check all files in the repository
 # -----------------------------------------------------------------------------
 
-check-all: install
-	yarn trunk check --all
+check-all: init
+	yarn trunk check --all $(trunk_args)
 
 .PHONY: format # Format new and changed files
 # -----------------------------------------------------------------------------
 
-format: install
-	yarn trunk fmt
+format: init
+	yarn trunk fmt $(trunk_args)
 
 .PHONY: format-all # Format all files in the repository
 # -----------------------------------------------------------------------------
 
-format-all: install
-	yarn trunk fmt --all
+format-all: init
+	yarn trunk fmt --all $(trunk_args)
 
-# Clean
+.PHONY: test-build # Test the devcontainer build
 # -----------------------------------------------------------------------------
 
+devcontainer_dir = $(top_dir)/.devcontainer
+
+test-build: init
+	. $(devcontainer_dir)/.env && $(devcontainer_dir)/test_build.sh
+
+.PHONY: ci # Make all CI targets
+# -----------------------------------------------------------------------------
+
+ci:
+	CI=true $(MAKE) init upgrade check-all format-all test-build
+
 .PHONY: clean # Remove build artifacts
+# -----------------------------------------------------------------------------
+
 clean: _rm-empty-dirs
 
 .PHONY: _rm-empty_-irs

@@ -1,1 +1,6 @@
 node_modules
+
+# The devcontainer lock files should not be committed to the repository, as the
+# dependencies should be recalculated on every run
+.devcontainer/Brewfile.lock.json
+.devcontainer/yarn.lock

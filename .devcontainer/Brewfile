@@ -1,0 +1,49 @@
+brew "actionlint"
+brew "bash-completion@2"
+brew "codespell"
+brew "direnv"
+brew "dotenv-linter"
+brew "editorconfig-checker"
+brew "fd"
+brew "fdupes"
+brew "gcc"
+brew "gh"
+brew "git"
+brew "gitleaks"
+brew "go"
+brew "hadolint"
+brew "htop"
+brew "jq"
+brew "lychee"
+brew "markdownlint-cli"
+brew "markdownlint-cli2"
+brew "moreutils"
+brew "optipng"
+brew "pipx"
+brew "pngcheck"
+brew "pngcrush"
+brew "pngnq"
+brew "pngquant"
+brew "proselint"
+brew "python"
+brew "semgrep"
+brew "shellcheck"
+brew "shfmt"
+brew "sqlfluff"
+brew "svgo"
+brew "syft"
+brew "taplo"
+brew "the_silver_searcher"
+brew "tree"
+brew "trivy"
+brew "yamllint"
+
+# TODO
+# -----------------------------------------------------------------------------
+
+# - [ ] fixred
+# - [ ] brok
+# - [ ] ripgrep
+# - [ ] fzf
+#   - [ ] Install https://github.com/junegunn/fzf in devcontainer
+# - [ ] Install hooks in dotfiles repo
