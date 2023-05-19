@@ -12,7 +12,9 @@ LC_ALL = C # Ensure simplest POSIX locale
 .PHONY: build # Build the container
 # -----------------------------------------------------------------------------
 
+build:
+	echo "TODO: Implement this target"
+	exit 1
+
 .PHONY: build-test # Test the build in the current container
 # -----------------------------------------------------------------------------
-
-
