@@ -3,9 +3,12 @@
     "dockerfile": "Dockerfile"
   },
   // "remoteUser": "root",
+  "onCreateCommand": ["${DEVCONTAINER_WORKDIR}/scripts/on_create.sh"],
   "updateContentCommand": [
-    "/opt/devcontainer/update_content.sh",
-    "${containerWorkspaceFolder}"
+    "${DEVCONTAINER_WORKDIR}/scripts/update_content.sh"
+  ],
+  "postCreateCommand": [
+    "${DEVCONTAINER_WORKDIR}/scripts/post_create.sh"
   ],
   "customizations": {
     "vscode": {

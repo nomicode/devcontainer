@@ -1,7 +1,8 @@
 #!/bin/sh -ex
 
-USE_EMOJI=false
-export USE_EMOJI
+# shellcheck source=.devcontainer/build/sh.d/common
+. ./build/sh.d/common
+print_running "$0"
 
 pipx ensurepath
 

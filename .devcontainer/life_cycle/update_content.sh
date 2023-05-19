@@ -1,20 +1,32 @@
 #!/bin/sh -e
 
 # Update content
-# ============================================================================
 
 # Run whenever the contents of the workspace mount are updated
 # https://containers.dev/implementors/json_reference/#lifecycle-scripts
 
-# Print help if no argument is provided
-workspace_dir="${1}"
-if test -z "${workspace_dir}"; then
-    echo "Usage: ${0} WORKSPACE_DIR" >&2
-    exit 1
-fi
+# ============================================================================
+
+# This command is always run from the workspace directory
+workspace_dir="$(pwd)"
+
+# Fix permissions
+# ----------------------------------------------------------------------------
 
 # Get current username
 whoami="$(whoami)"
+user_id="$(id -u)"
+
+# If not the superuser, add the current user to the `admin` group (alowing
+# write acccess to the contents of the `/usr/local` directory)
+if test "${user_id}" != 0; then
+    usermod -aG admin "${whoami}"
+fi
+
+# Fix Homebrew permissions (in case the container was originally built by a
+# different user)
+homebrew_prefix="$(brew --prefix)"
+sudo chown -R "${whoami}" "${homebrew_prefix}"
 
 # Fix workspace umask
 # ----------------------------------------------------------------------------
@@ -27,23 +39,6 @@ whoami="$(whoami)"
 sudo chown -R "${whoami}" "${workspace_dir}"
 # Remove all extended ACL entries (preserved by Docker during mount)
 sudo setfacl -bnR "${workspace_dir}"
-
-# Fix Homebrew ownership
-# ----------------------------------------------------------------------------
-
-# Allow the current user to make changes to Homebrew by changing ownership of
-# the `HOMEBREW_PREFIX` directory and its contents to the current user
-
-if test -z "${HOMEBREW_PREFIX:=}"; then
-    HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-fi
-
-# Test whether the `HOMEBREW_PREFIX` directory exists
-if test -d "${HOMEBREW_PREFIX}"; then
-    # Change the ownership of the `HOMEBREW_PREFIX` directory and its contents
-    # to the current user
-    sudo chown -R "${whoami}" "${HOMEBREW_PREFIX}"
-fi
 
 # Allow direnv
 # ----------------------------------------------------------------------------

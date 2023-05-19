@@ -1,4 +1,8 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
+
+# shellcheck source=.devcontainer/build/sh.d/common
+. ./build/sh.d/common
+print_running "$0"
 
 NODESOURCE_URL=https://deb.nodesource.com/setup_19.x
 NODESOURCE_SCRIPT=nodesource_setup.sh
@@ -8,9 +12,6 @@ YARN_PUBKEY_URL="${YARN_DEB_REPO}/pubkey.gpg"
 YARN_PUBKEY=pubkey.gpg
 YARN_KEY_PATH="/usr/share/keyrings/yarnkey.gpg"
 YARN_LIST=/etc/apt/sources.list.d/yarn.list
-
-# Custom sources
-# -----------------------------------------------------------------------------
 
 tmp_dir="$(mktemp -d)"
 clean() { rm -rf "${tmp_dir}"; }
@@ -31,20 +32,10 @@ trap clean EXIT
     sudo mv yarn.list "${YARN_LIST}"
 )
 
-# APT setup
-# -----------------------------------------------------------------------------
-
-sudo apt-get -qq update -y
-sudo apt-get -qq upgrade -y
-
-DEBIAN_FRONTEND=noninteractive \
-    sudo apt-get -qq install -y --no-install-recommends \
-    acl \
-    build-essential \
-    cronic \
-    file \
-    gcc \
+apt_install \
     nodejs \
     yarn
 
-sudo rm -rf /var/lib/apt/lists/*
+sudo yarn install --global --prefer-dedupe
+
+sudo yarn cache clean --global --force
