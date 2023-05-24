@@ -21,8 +21,11 @@ sudo setfacl -bnR "${workspace_dir}"
 # and used as devcontainer (but it seems this is not the case)
 echo "${PATH}"
 
-# Test whether `direnv` is on the PATH
-if command -v direnv; then
-    # Allow direnv to load `.envrc` files in the workspace mount
-    direnv allow "${workspace_dir}"
+# Test for `.envrc` files
+if test -f "${workspace_dir}/.envrc"; then
+    # Test whether `direnv` is on the PATH
+    if command -v direnv; then
+        # Allow direnv to load `.envrc` files in the workspace mount
+        direnv allow "${workspace_dir}"
+    fi
 fi
